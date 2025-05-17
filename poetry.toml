@@ -1,0 +1,7 @@
+[virtualenvs]
+in-project = true
+[virtualenvs.options]
+no-setuptools = true
+
+[installer]
+no-binary = [":none:"]
