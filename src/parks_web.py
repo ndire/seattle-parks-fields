@@ -2,7 +2,7 @@ import os.path
 from datetime import time, date
 import requests
 
-from fields import FIELDS
+from fields import FIELD_MAP
 from time_block import TimeBlock
 
 
@@ -14,7 +14,7 @@ def parse_block(field_key: str, day: str, desc: dict) -> TimeBlock:
     return TimeBlock(field_key, date.fromisoformat(day), start, end)
 
 def get_availability(field_key, start_date, end_date) -> list[TimeBlock]:
-    field_code = FIELDS[field_key]
+    field = FIELD_MAP[field_key]
     params = {
         'start_date': start_date,
         'end_date': end_date,
@@ -25,6 +25,6 @@ def get_availability(field_key, start_date, end_date) -> list[TimeBlock]:
         'no_cache': 'true',
         'locale': 'en-US'
     }
-    r = requests.get(os.path.join(BASE_URL, field_code), params=params)
+    r = requests.get(os.path.join(BASE_URL, field.id), params=params)
     dates = r.json()['body']['details']['daily_details']
     return [parse_block(field_key, d['date'], desc) for d in dates for desc in d['times']] 
